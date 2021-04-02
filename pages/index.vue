@@ -1,289 +1,199 @@
 <template>
-<div class="testbox">
-      <form @submit.prevent='send'>
-        <h1>Complaint Form</h1>
-        <p>Please send us details about the incident you would like to report. Our Complaint Center will analyze your complaint and take the appropriate measures in order that the reported situation will not occur at any other time in the future.</p>
-        <hr/>
-        
-        <div class="item">
-          <p>Name</p>
-          <input type="text" name="name" placeholder="Last Name, First Name M.I" v-model="name" required/>
-        </div>
-        <div class="item">
-          <p>Email</p>
-          <input type="text" name="email" placeholder="ex: myname@example.com" v-model="email" required/>
-        </div>
-        <div class="item">
-          <p>Department</p>
-          <input type="text" name="department" v-model="department" required/>
-        </div>
-        <div class="item">
-          <p>Computer ID</p>
-          <input type="text" name="computer_ID" accept=".jpg,.jpeg" v-model="computer_ID" required/>
-        </div>
-         <div class="item">
-          <p>Upload Screenshot</p>
-          <input type="file" name="name" accept=".jpg,.jpeg,.png" @change="processFile($event)" required/>
-        </div>
-       
-        <div class="item complaint-details">
-          <p>Describe the Problem</p>
-          <div class="complaint-details-item">
-            <textarea rows="5" v-model="complaint" required></textarea>
-          </div>
-        </div>
-       
-        <div class="btn-block">
-          <button type="submit">Send</button>
-        </div>
-      </form>
-    </div>
-    
+     <section class="login">
+            <div class="loginContainer">
+                <h1>E-Ticket</h1> 
+
+                <label>Email</label>
+                <input type="text" autoFocus required placeholder="Enter Email Address" v-model="email"/>
+
+                <label>Password</label>
+                <input type="password" autoFocus required placeholder="Enter Password" v-model="password"/>
+
+                <div class="btnContainer">
+                   <button v-if="!flag" @click="login">Login</button>
+                   <button v-if="flag" @click="signup">Register</button>
+
+                   <p v-if="!flag">
+                       Don't have an account?
+                            <span v-on:click="flag = true" >Sign Up</span>
+                    </p>
+
+                    <p v-if="flag">
+                       Have an account?
+                            <span v-on:click="flag = false"  >Sign In</span>
+                    </p>
+                </div>
+            </div>
+        </section>
 </template>
 
 <script>
-
-import firebase from "firebase/app"
-import "firebase/firestore"
-import 'firebase/storage'
-import {db} from '~/plugins/firebase.js'
-
+import firebase from 'firebase/app'
+import "firebase/auth"
 export default {
-  
-    data(){
-      return{
-        name: "",
-        email: "",
-        department: "",
-        computer_ID: "",
-        screenshot_link: "",
-        complaint: "",
-        file: ""
-      }
-    },
     methods:{
-    
-      processFile(event) {
-        this.file = event.target.files[0]
-        console.log(this.file);
-      },
-
-      uploadImage(){
-
-        let file = this.file
-        console.log('here: ' + file.name)
-        var storageRef = firebase.storage().ref('Screenshots/' + file.name);
-        let uploadTask = storageRef.put(file)
-        
-        uploadTask.on('state_changed', (snapshot) =>{
-        }, (error) =>{
-            console.log(error)
-        }, () =>{
-            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                console.log('File available at', downloadURL);
-                this.screenshot_link = downloadURL
-                this.uploadData()
-            });
-        });
-      },
-
-      uploadData(){
-        db.collection("Requests")
-        .add({
-          name: this.name,
-          email: this.email,
-          department: this.department,
-          computer_ID: this.computer_ID,
-          screenshot_link: this.screenshot_link,
-          complaint: this.complaint,
-          ticket: "",
-          is_new_request: true,
-          is_ongoing_request: false,
-          is_done_request: false
-        })
-        .then((docRef)=>{
-              console.log('Document written: ', docRef.id)
-              alert('Your report is successfully sent')
-              
-              //updates ticket id to the document
-              let document = docRef.id
-              db.collection('Requests').doc(document)
-              .update({
-                ticket: document
-              })
-              .then(()=>{
-                console.log('Updated ticket ID: ' + document)
-              })
-              .catch((error)=>{
-                console.log(error)
-              })
-        })
-        .catch((error)=>{
-          console.log(error)
-        })
-
-      },
-
-      send(){
-        this.uploadImage()        
-      }
-
-
+    state() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          console.log(user);
+        }
+      });
     },
+    signup() {
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then((user) => 
+      {
+          alert("Thank you for signing up");
+          console.log(user);
+          firebase
+            .auth()
+            .currentUser.sendEmailVerification()
+            .then((user) => {
+              alert("Verification Email Sent");
+            })
+            .catch((error) => {
+              console.log(error);
+              this.error = error;
+            });
+        }).catch(function(error) {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          if (errorCode == "auth/weak-password") {
+            alert("The password is too weak.");
+          } else {
+            alert(errorMessage);
+          }
+          console.log(error);
+        });
+    },
+    login() {
+            firebase.auth().signInWithEmailAndPassword(this.email, this.password).then((user) => {
+                if(this.email == "admin@admin.com"){
+                    this.$router.push("/admin");
+                }else{
+                    this.$router.push("/complaint");
+                }
+            }).catch(function(error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                // [START_EXCLUDE]
+                if (errorCode === "auth/wrong-password") {
+                    alert("Wrong password.");
+                }
+                if (errorCode === "auth/invalid-email") {
+                    alert("Invalid email.");
+                }
+                if (errorCode === "auth/user-disabled") {
+                    alert("User disabled.");
+                }
+                if (errorCode === "auth/user-not-found") {
+                    alert("User Not Found");
+                }
+                console.log(error);
+                // document.getElementById('login').disabled = false;
+                // [END_EXCLUDE]
+            });
+        },
+    },
+    data: () => {
+    return {
+      email: "",
+      password: "",
+      flag:false,
+      
+    };
+  },
 }
 </script>
 
 <style>
-    html, body {
-      min-height: 100%;
-      }
-      body, div, form, input, select, p { 
-      padding: 0;
-      margin: 0;
-      outline: none;
-      font-family: Roboto, Arial, sans-serif;
-      font-size: 14px;
-      color: #666;
-      line-height: 22px;
-      }
-      h1 {
-      margin: 15px 0;
-      font-weight: 400;
-      }
-      h4 {
-      margin-bottom: 4px;
-      }
-      .testbox {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: inherit;
-      padding: 3px;
-      }
-      form {
-      width: 100%;
-      padding: 20px;
-      background: #fff;
-      box-shadow: 0 2px 5px #ccc; 
-      }
-      input, select, textarea {
-      width: 100%;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-      }
-      input {
-      width: calc(100% - 10px);
-      padding: 5px;
-      }
-      input:hover, textarea:hover, select:hover {
-      outline: none;
-      border: 1px solid #095484;
-      }
-      select {
-      padding: 7px 0;
-      background: transparent;
-      }
-      textarea {
-      margin-bottom: 3px;
-      }
-      .item {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      margin: 10px 0;
-      }
-      input[type="date"]::-webkit-inner-spin-button {
-      display: none;
-      }
-      .item i, input[type="date"]::-webkit-calendar-picker-indicator {
-      position: absolute;
-      font-size: 20px;
-      color: #a9a9a9;
-      }
-      .item i {
-      left: 94%;
-      top: 30px;
-     z-index: 1;
-      }
-      [type="date"]::-webkit-calendar-picker-indicator {
-      left: 93%;
-      z-index: 2;
-      opacity: 0;
-      cursor: pointer;
-      }
-      .street, .desired-outcome-item, .complaint-details-item {
-      display: flex;
-      flex-wrap: wrap;
-      }
-      .street input {
-      margin-bottom: 10px;
-      }
-      small {
-      display: block;
-      line-height: 16px;
-      opacity: 0.7;
-      }
-      .btn-block {
-      margin-top: 20px;
-      text-align: center;
-      }
-      button {
-      width: 150px;
-      padding: 10px;
-      border: none;
-      -webkit-border-radius: 5px; 
-      -moz-border-radius: 5px; 
-      border-radius: 5px; 
-      background-color: #095484;
-      font-size: 16px;
-      color: #fff;
-      cursor: pointer;
-      }
-      button:hover {
-      background-color: #0666a3;
-      }
-      @media (min-width: 568px) {
-      input {
-      width: calc(35% - 20px);
-      margin: 0 0 0 8px;
-      }
-      select {
-      width: calc(50% - 8px);
-      margin: 0 0 10px 8px;
-      }
-      .item {
-      flex-direction: row;
-      align-items: center;
-      }
-      .item p {
-      width: 30%;
-      }
-      .item i {
-      left: 61%;
-      top: 25%;
-      }
-      [type="date"]::-webkit-calendar-picker-indicator {
-      left: 60%;
-      }
-      .street, .desired-outcome-item, .complaint-details-item {
-      width: 70%;
-      }
-      .street input {
-      width: calc(50% - 20px);
-      }
-      .street .street-item {
-      width: 100%;
-      }
-      .address p, .desired-outcome p, .complaint-details p {
-      align-self: flex-start;
-      margin-top: 6px;
-      }
-      .desired-outcome-item, .complaint-details-item {
-      margin-left: 12px;
-      }
-      textarea {
-      width: calc(100% - 6px);
-      }
-      }
-</style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Nunito", sans-serif;
+}
+button {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 15px 0;
+  color: #fff;
+  font-size: 16px;
+  letter-spacing: 1px;
+  background: #603bbb;
+  cursor: pointer;
+}
+.login {
+  width: 100%;
+  min-height: 100vh;
+  padding: 0 20px;
+  background: #e9e9e9;
+  display: flex;
+}
+.login .loginContainer {
+  padding: 60px;
+  margin: auto;
+  width: 100%;
+  max-width: 520px;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: radial-gradient(
+    ellipse at left bottom,
+    rgba(22, 24, 47, 1) 0%,
+    rgba(38, 20, 72, 0.9) 59%,
+    rgba(17, 27, 75, 0.9) 100%
+  );
+  box-shadow: 0 50px 70px -20px rgba(0, 0, 0, 0.8);
+}
+.login .loginContainer h1{
+  color: white;
+  margin: 14px 0;
+  display: flex;
+  justify-content: center;
+  font-size: 33px;
+  line-height: 1;
+}
+.login .loginContainer label {
+  color: white;
+  margin: 14px 0;
+  display: block;
+  font-size: 22px;
+  line-height: 1;
+}
+.login .loginContainer input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 19px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  letter-spacing: 1px;
+}
+.login .loginContainer .btnContainer {
+  width: 100%;
+  padding: 24px 0;
+}
+.login .loginContainer .btnContainer p {
+  margin: 14px 0 0 0;
+  text-align: right;
+  color: #fff;
+}
+.login .loginContainer .btnContainer p span {
+  color: yellow;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin-left: 5px;
+  cursor: pointer;
+  transition: all 400ms ease-in-out;
+}
+.login .loginContainer .btnContainer p span:hover {
+  color: red;
+}
+.login .loginContainer .errorMsg {
+  color: red;
+  font-size: 16px;
+}
+</style> 
