@@ -60,17 +60,18 @@ export default {
             computerID:"",
             image:"",
             description:"",
+            ticket:''
         }
     },
     mounted(){
-        firebase.firestore().collection('request').where("ticketId","==",this.ticketId).get().then(snapshot => {
+        firebase.firestore().collection('Requests').where("ticket","==",this.ticketId).get().then(snapshot => {
             snapshot.docs.forEach(docs => {
                 this.name = docs.data().name;
                 this.email = docs.data().email;
                 this.department = docs.data().department;
-                this.computerID = docs.data().computerId;
-                this.image = docs.data().uploads;
-                this.description = docs.data().name;
+                this.computerID = docs.data().computer_ID;
+                this.image = docs.data().screenshot_link;
+                this.description = docs.data().complaint;
             })
         }).catch(function(error) {
         console.log("Error getting documents: ", error);

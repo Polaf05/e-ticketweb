@@ -14,12 +14,12 @@
                 </tr>
                 
                 <tr v-for="(req,index) in request" :key="index">
-                    <td>{{req.ticketId}}</td>
+                    <td>{{req.ticket}}</td>
                     <td>{{req.name}}</td>
                     <td>{{req.email}}</td>
                     <td>{{req.department}}</td>
                     <td>{{req.computerId}}</td>
-                    <td><button @click="details(req.ticketId)">See Full Details...</button></td>
+                    <td><button @click="details(req.ticket)">See Full Details...</button></td>
                 </tr>
             
             </table>
@@ -56,7 +56,7 @@ export default {
         }
     },
     mounted(){
-        firebase.firestore().collection("request").get().then((querySnapshot) => {
+        firebase.firestore().collection("Requests").get().then((querySnapshot) => {
             querySnapshot.forEach((docs) => {
                 this.request = [...this.request, docs.data()];
             });
