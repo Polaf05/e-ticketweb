@@ -37,7 +37,7 @@
        
         <div class="btn-block">
           <button type="submit">Mark as Complete</button>
-          <input type="button" value="Back!" onclick="history.go(-1)">
+          <button type="button" onclick="history.go(-1)"> Back! </button>
         </div>
       </form>
       </div>
@@ -94,7 +94,6 @@ export default {
       outline: none;
       font-family: Roboto, Arial, sans-serif;
       font-size: 14px;
-      color: #666;
       line-height: 22px;
       }
       h1 {
@@ -112,16 +111,19 @@ export default {
       padding: 3px;
       }
       form {
-      width: 100%;
-      padding: 20px;
-      background: #fff;
-      box-shadow: 0 2px 5px #ccc; 
+      background: #FFFFFF;
+      max-width: 80%;
+      margin: 20px auto 20px;
+      padding: 40px;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
       }
       input, select, textarea {
       width: 100%;
       margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 3px;
+      cursor: default;
+      color: rgb(151, 151, 151);
       }
       input {
       width: calc(100% - 10px);
@@ -129,7 +131,7 @@ export default {
       }
       input:hover, textarea:hover, select:hover {
       outline: none;
-      border: 1px solid #095484;
+      border: 1px solid rgba(21, 20, 72, 1);
       }
       select {
       padding: 7px 0;
@@ -186,13 +188,13 @@ export default {
       -webkit-border-radius: 5px; 
       -moz-border-radius: 5px; 
       border-radius: 5px; 
-      background-color: #095484;
-      font-size: 16px;
+      background-color: rgba(21, 20, 72, 1);
+      font-size: 14px;
       color: #fff;
       cursor: pointer;
       }
       button:hover {
-      background-color: #0666a3;
+      background-color: rgba(17, 47, 75, 1);
       }
       @media (min-width: 568px) {
       input {

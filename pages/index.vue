@@ -1,7 +1,7 @@
 <template>
      <section class="login">
             <div class="loginContainer">
-                <h1>E-Ticket</h1> 
+                <h3>e-Ticket</h3> 
 
                 <label>Email</label>
                 <input type="text" autoFocus required placeholder="Enter Email Address" v-model="email"/>
@@ -13,12 +13,12 @@
                    <button v-if="!flag" @click="login">Login</button>
                    <button v-if="flag" @click="signup">Register</button>
 
-                   <p v-if="!flag">
+                   <p class="message" v-if="!flag">
                        Don't have an account?
-                            <span v-on:click="flag = true" >Sign Up</span>
+                            <span v-on:click="flag = true" >Create an account</span>
                     </p>
 
-                    <p v-if="flag">
+                    <p class="message"  v-if="flag">
                        Have an account?
                             <span v-on:click="flag = false"  >Sign In</span>
                     </p>
@@ -110,17 +110,17 @@ export default {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Nunito", sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 button {
   border: none;
   outline: none;
   width: 100%;
-  padding: 15px 0;
+  padding: 15px;
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
   letter-spacing: 1px;
-  background: #603bbb;
+  background: #4e309b;
   cursor: pointer;
 }
 .login {
@@ -130,26 +130,26 @@ button {
   background: #e9e9e9;
   display: flex;
 }
+
 .login .loginContainer {
   padding: 60px;
   margin: auto;
   width: 100%;
-  max-width: 520px;
-  min-height: 600px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background: radial-gradient(
     ellipse at left bottom,
-    rgba(22, 24, 47, 1) 0%,
-    rgba(38, 20, 72, 0.9) 59%,
-    rgba(17, 27, 75, 0.9) 100%
+    rgb(35, 22, 47) 0%,
+    rgba(21, 20, 72, 0.9) 59%,
+    rgba(17, 63, 75, 0.9) 100%
   );
-  box-shadow: 0 50px 70px -20px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  border-radius: 25px;
 }
-.login .loginContainer h1{
+.login .loginContainer h3{
   color: white;
-  margin: 14px 0;
   display: flex;
   justify-content: center;
   font-size: 33px;
@@ -159,14 +159,15 @@ button {
   color: white;
   margin: 14px 0;
   display: block;
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1;
 }
 .login .loginContainer input {
   width: 100%;
   border: none;
   outline: none;
-  font-size: 19px;
+  margin: 0 0 15px;
+  font-size: 15px;
   padding: 10px;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
@@ -179,10 +180,11 @@ button {
 .login .loginContainer .btnContainer p {
   margin: 14px 0 0 0;
   text-align: right;
-  color: #fff;
+  color: #b3b3b3;
+  font-size: 12px;
 }
 .login .loginContainer .btnContainer p span {
-  color: yellow;
+  color: #4c7faf;
   font-weight: 500;
   letter-spacing: 0.5px;
   margin-left: 5px;
@@ -190,10 +192,11 @@ button {
   transition: all 400ms ease-in-out;
 }
 .login .loginContainer .btnContainer p span:hover {
-  color: red;
+  text-decoration: underline;
 }
 .login .loginContainer .errorMsg {
   color: red;
   font-size: 16px;
 }
+
 </style> 
