@@ -56,7 +56,7 @@ export default {
         }
     },
     mounted(){
-        firebase.firestore().collection("Requests").get().then((querySnapshot) => {
+        firebase.firestore().collection('Requests').where("is_done_request","==",false).get().then((querySnapshot) => {
             querySnapshot.forEach((docs) => {
                 this.request = [...this.request, docs.data()];
             });

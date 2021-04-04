@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="testbox">
-      <form @submit.prevent="">
+      <form @submit.prevent="updateRequest">
         <h1>Complaint Form</h1>
         <p>Please send us details about the incident you would like to report. Our Complaint Center will analyze your complaint and take the appropriate measures in order that the reported situation will not occur at any other time in the future.</p>
         <hr/>
@@ -37,7 +37,7 @@
        
         <div class="btn-block">
           <button type="submit">Mark as Complete</button>
-          <button type="button" onclick="history.go(-1)"> Back! </button>
+          <button type="button" onclick="history.go(0)"> Back! </button>
         </div>
       </form>
       </div>
@@ -60,7 +60,8 @@ export default {
             computerID:"",
             image:"",
             description:"",
-            ticket:''
+            ticket:'',
+            id:""
         }
     },
     mounted(){
@@ -72,13 +73,29 @@ export default {
                 this.computerID = docs.data().computer_ID;
                 this.image = docs.data().screenshot_link;
                 this.description = docs.data().complaint;
+                this.id = docs.id;
             })
         }).catch(function(error) {
         console.log("Error getting documents: ", error);
         });
       
         
-  }
+  },
+
+  methods:{
+    updateRequest(){
+      firebase.firestore().collection("Requests").doc(this.id).update({
+        is_done_request: true,
+      }).then(function() {
+      console.log("Document successfully updated!");
+      history.go(0);
+      })
+      .catch(function(error) {
+          console.error("Error updating document: ", error);
+      });
+    }
+
+  },
      
 }
 
