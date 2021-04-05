@@ -3,7 +3,6 @@
     <div class="testbox">
       <form @submit.prevent="updateRequest">
         <h1>Complaint Form</h1>
-        <p>Please send us details about the incident you would like to report. Our Complaint Center will analyze your complaint and take the appropriate measures in order that the reported situation will not occur at any other time in the future.</p>
         <hr/>
         
         <div class="item">
@@ -24,7 +23,7 @@
         </div>
        
         <div class="item complaint-details">
-          <p>Describe the Problem</p>
+          <p>Problem</p>
           <div class="complaint-details-item">
             <textarea rows="5" :value="description" readonly></textarea>
           </div>
@@ -47,6 +46,7 @@
 <script>
 import firebase from "firebase/app"
 import "firebase/firestore"
+import emailjs from 'emailjs-com'
     
 export default {
 
@@ -84,16 +84,36 @@ export default {
 
   methods:{
     updateRequest(){
+      //notifies the user via email about the completion report
+      this.notifyUser()
+      
       firebase.firestore().collection("Requests").doc(this.id).update({
         is_done_request: true,
       }).then(function() {
-      console.log("Document successfully updated!");
-      history.go(0);
+        console.log("Document successfully updated!");
+        history.go(0);
+
+        
       })
       .catch(function(error) {
           console.error("Error updating document: ", error);
       });
-    }
+
+      
+    },
+    notifyUser(){
+       emailjs.send('service_v84ih4u', 'template_ev0sro6', {
+          to_name: this.name,
+          to_email: this.email,
+          ticket_ID: this.ticket_ID,
+          complaint: this.complaint
+          }, 'user_sEKOlCjvi7BXc4HSE3Ovz')
+          .then((result) => {
+              console.log('SENT SUCCESS!', result.status, result.text);
+          }, (error) => {
+              console.log('SENT FAILED...', error);
+          });
+      }
 
   },
      

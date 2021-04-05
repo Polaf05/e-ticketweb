@@ -47,6 +47,7 @@ import firebase from "firebase/app"
 import "firebase/firestore"
 import 'firebase/storage'
 import {db} from '~/plugins/firebase.js'
+import emailjs from 'emailjs-com'
 
 export default {
   
@@ -58,6 +59,7 @@ export default {
         computer_ID: "",
         screenshot_link: "",
         complaint: "",
+        ticket_ID: "",
         file: ""
       }
     },
@@ -68,7 +70,7 @@ export default {
         console.log(this.file);
       },
 
-      uploadImage(){
+      uploadImage(e){
 
         let file = this.file
         console.log('here: ' + file.name)
@@ -82,7 +84,7 @@ export default {
             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                 console.log('File available at', downloadURL);
                 this.screenshot_link = downloadURL
-                this.uploadData()
+                this.uploadData(e)
             });
         });
       },
@@ -105,11 +107,16 @@ export default {
               console.log('Document written: ', docRef.id)
               alert('Your report is successfully sent')
               
+              this.ticket_ID = docRef.id
+              
+              //notification to both user and admin via email
+              this.sendReportEmail()
+              this.notifyAdmin()  
+              
               //updates ticket id to the document
-              let document = docRef.id
-              db.collection('Requests').doc(document)
+              db.collection('Requests').doc(this.ticket_ID)
               .update({
-                ticket: document
+                ticket: this.ticket_ID
               })
               .then(()=>{
                 console.log('Updated ticket ID: ' + document)
@@ -125,11 +132,36 @@ export default {
       },
 
       send(){
-        this.uploadImage()        
+        this.uploadImage()    
+      },
+
+      sendReportEmail(){
+        emailjs.send('service_vvzjxut', 'template_z5mgdfw', {
+          to_name: this.name,
+          to_email: this.email,
+          ticket_ID: this.ticket_ID,
+          complaint: this.complaint
+          }, 'user_9h2nE6bDSStQtpSbUU3p2')
+          .then((result) => {
+              console.log('SENT SUCCESS!', result.status, result.text);
+          }, (error) => {
+              console.log('SENT FAILED...', error);
+          });
+      },
+
+      notifyAdmin(){
+        emailjs.send('service_vvzjxut', 'template_cam276l', {
+          ticket_ID: this.ticket_ID,
+          }, 'user_9h2nE6bDSStQtpSbUU3p2')
+          .then((result) => {
+              console.log('NOTIFY SUCCESS!', result.status, result.text);
+          }, (error) => {
+              console.log('NOTIFY FAILED...', error);
+          });
       }
 
 
-    },
+      },
 }
 </script>
 
