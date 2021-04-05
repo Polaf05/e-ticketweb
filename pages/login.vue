@@ -35,11 +35,8 @@ export default {
     
     login() {
             firebase.auth().signInWithEmailAndPassword(this.email, this.password).then((user) => {
-                if(this.email == "admin@admin.com"){
                     this.$router.push("/admin");
-                }else{
-                    this.$router.push("/complaint");
-                }
+               
             }).catch(function(error) {
                 // Handle Errors here.
                 var errorCode = error.code;
