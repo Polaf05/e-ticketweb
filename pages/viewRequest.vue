@@ -77,6 +77,7 @@ export default {
 
                 firebase.firestore().collection("Requests").doc(this.id).update({
                   is_ongoing_request: true,
+                  is_new_request:false,
                 }).then(function() {
                   console.log("Document successfully updated!");
                   

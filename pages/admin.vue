@@ -1,7 +1,7 @@
 <template>
     <div>    
         <div v-if="tab == 0" class="table">
-            <h2>Request Table</h2>
+            <h2>Request Table</h2> <button @click="signout()">Sign Out</button>
             <no-ssr>
             <table id="customers">
                 <tr>
@@ -24,6 +24,8 @@
             
             </table>
             </no-ssr>
+
+            
         </div>
         <div>
             <ViewReq v-bind:ticketId = "ticket" v-if="tab == 1"/>
@@ -45,7 +47,14 @@ export default {
             this.ticket = id;
             this.tab = 1;
 
-        }
+        },
+         signout(){
+    firebase.auth().signOut().then(() => {
+              this.$router.push('/login');
+            }).catch((error) => {
+              // An error happened.
+        });
+    }
     },
     data(){
         return{
@@ -56,10 +65,18 @@ export default {
         }
     },
     mounted(){
+        firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+          this.$router.push('/login')
+        }
+        else{
         firebase.firestore().collection('Requests').where("is_done_request","==",false).get().then((querySnapshot) => {
             querySnapshot.forEach((docs) => {
                 this.request = [...this.request, docs.data()];
             });
+        });
+        }
+
         });
 
     },
