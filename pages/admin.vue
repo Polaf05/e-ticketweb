@@ -2,6 +2,13 @@
     <div>    
         <div v-if="tab == 0" class="table">
             <h2>Request Table</h2> <button @click="signout()">Sign Out</button>
+             <div class="item">
+                <p>Ticket ID:</p>
+                <input type="text" name="ticket_ID" v-model="ticket_ID_search" required/>
+            </div>
+            <div class="btn-block">
+                <button @click="search">Search</button>
+            </div>
             <no-ssr>
             <table id="customers">
                 <tr>
@@ -10,7 +17,6 @@
                     <th>Email</th>
                     <th>Department</th>
                     <th>Computer ID</th>
-                    <th>Others...</th>
                 </tr>
                 
                 <tr v-for="(req,index) in request" :key="index">
@@ -24,7 +30,28 @@
             
             </table>
             </no-ssr>
-
+            <h2>Finished Request</h2> 
+            <no-ssr>
+            <table id="customers">
+                <tr>
+                    <th>Ticket ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Computer ID</th>
+                    <th>Others...</th>
+                </tr>
+                
+                <tr v-for="(done,index) in done" :key="index">
+                    <td>{{done.ticket}}</td>
+                    <td>{{done.name}}</td>
+                    <td>{{done.email}}</td>
+                    <td>{{done.department}}</td>
+                    <td>{{done.computer_ID}}</td>
+                </tr>
+            
+            </table>
+            </no-ssr>
             
         </div>
         <div>
@@ -54,13 +81,30 @@ export default {
             }).catch((error) => {
               // An error happened.
         });
+    },
+    search(){
+        console.log(this.ticket_ID_search);
+        this.request.forEach(docs => {
+            
+            if(this.ticket_ID_search == docs.ticket){
+                this.flag = 1;
+                this.details(this.ticket_ID_search);
+                
+            }
+        });
+        if(this.flag == 0){
+            alert("Cannot Find ticket Id");
+        }
     }
     },
     data(){
         return{
             request:[],
+            done:[],
             ticket:"",
-            tab:0
+            tab:0,
+            ticket_ID_search:"",
+            flag:0,
 
         }
     },
@@ -73,6 +117,12 @@ export default {
         firebase.firestore().collection('Requests').where("is_done_request","==",false).get().then((querySnapshot) => {
             querySnapshot.forEach((docs) => {
                 this.request = [...this.request, docs.data()];
+            });
+        });
+
+        firebase.firestore().collection('Requests').where("is_done_request","==",true).get().then((querySnapshot) => {
+            querySnapshot.forEach((docs) => {
+                this.done = [...this.done, docs.data()];
             });
         });
         }
