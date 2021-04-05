@@ -74,6 +74,19 @@ export default {
                 this.image = docs.data().screenshot_link;
                 this.description = docs.data().complaint;
                 this.id = docs.id;
+
+                firebase.firestore().collection("Requests").doc(this.id).update({
+                  is_ongoing_request: true,
+                }).then(function() {
+                  console.log("Document successfully updated!");
+                  
+                })
+                .catch(function(error) {
+                    console.error("Error updating document: ", error);
+                });
+
+
+
             })
         }).catch(function(error) {
         console.log("Error getting documents: ", error);
@@ -89,10 +102,10 @@ export default {
       
       firebase.firestore().collection("Requests").doc(this.id).update({
         is_done_request: true,
+        is_ongoing_request: false,
+        is_new_request:false,
       }).then(function() {
         console.log("Document successfully updated!");
-        history.go(0);
-
         
       })
       .catch(function(error) {
@@ -110,6 +123,7 @@ export default {
           }, 'user_sEKOlCjvi7BXc4HSE3Ovz')
           .then((result) => {
               console.log('SENT SUCCESS!', result.status, result.text);
+              history.go(0);
           }, (error) => {
               console.log('SENT FAILED...', error);
           });

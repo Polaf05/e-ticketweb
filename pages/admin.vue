@@ -18,7 +18,7 @@
                     <td>{{req.name}}</td>
                     <td>{{req.email}}</td>
                     <td>{{req.department}}</td>
-                    <td>{{req.computerId}}</td>
+                    <td>{{req.computer_ID}}</td>
                     <td><button @click="details(req.ticket)">See Full Details...</button></td>
                 </tr>
             
