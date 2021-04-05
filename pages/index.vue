@@ -40,8 +40,8 @@
         </div>
          
       </form>
-
-      <form v-if='follow_up_form' @submit.prevent='searchTicket'>
+    <div> 
+      <form v-if='follow_up_form' @submit.prevent='searchTicket' class="box">
         <h1>Follow up Form</h1>
         <p>You can follow up your complaints here by searching your ticket ID</p>
        
@@ -56,9 +56,10 @@
 
         <div class="item">
           <h3>Status:</h3>
-          <h5 id="status">your report status will appear here</h5>
+          <p id="status">your report status will appear here</p>
         </div>
       </form>
+    </div>
 
     </div>
     
@@ -214,6 +215,7 @@ export default {
 <style>
     html, body {
       min-height: 100%;
+      
       }
       body, div, form, input, select, p { 
       padding: 0;
@@ -237,12 +239,18 @@ export default {
       align-items: center;
       height: inherit;
       padding: 3px;
+      background-color: #d3d3d3;
+      height: 700px; 
+      background-image: url("https://image.freepik.com/free-photo/detail-brush-strokes-random-colors-use-as-background-texture-crafts-school_47726-5802.jpg");
+      background-repeat: no-repeat;
+      background-size: cover; 
       }
       form {
-      width: 100%;
-      padding: 20px;
-      background: #fff;
-      box-shadow: 0 2px 5px #ccc; 
+      background: #FFFFFF;
+      max-width: 70%;
+      margin: 20px auto 20px;
+      padding: 40px;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
       }
       input, select, textarea {
       width: 100%;
@@ -362,6 +370,33 @@ export default {
       }
       textarea {
       width: calc(100% - 6px);
+      }
+      .box button{
+        width: auto;
+        padding: 10px;
+        border: none;
+        -webkit-border-radius: 5px; 
+        -moz-border-radius: 5px; 
+        border-radius: 5px; 
+        background-color: #095484;
+        font-size: 14px;
+        color: #fff;
+        cursor: pointer;
+      }
+      .box{
+         background: #FFFFFF;
+        max-width: 90%;
+        margin: 20px auto 20px;
+        padding: 40px;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+      }
+      .box input{
+        width: 400px;
+      }
+      #status{
+        font-size: 16px;
+        width: 500px;
+        margin-left: 10px;
       }
       }
 </style>

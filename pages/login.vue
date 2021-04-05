@@ -85,7 +85,7 @@ button {
   color: #fff;
   font-size: 14px;
   letter-spacing: 1px;
-  background: #4e309b;
+  background: #51b9d8;
   cursor: pointer;
 }
 .login {
@@ -93,7 +93,10 @@ button {
   min-height: 100vh;
   padding: 0 20px;
   background: #e9e9e9;
-  display: flex;
+  display: flex; 
+  background-image: url("https://image.freepik.com/free-photo/detail-brush-strokes-random-colors-use-as-background-texture-crafts-school_47726-5802.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .login .loginContainer {
@@ -104,24 +107,19 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: radial-gradient(
-    ellipse at left bottom,
-    rgb(35, 22, 47) 0%,
-    rgba(21, 20, 72, 0.9) 59%,
-    rgba(17, 63, 75, 0.9) 100%
-  );
+  background-color: #f8f8f8;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-  border-radius: 25px;
+  border-radius: 15px;
 }
 .login .loginContainer h3{
-  color: white;
+  color: #232323;
   display: flex;
   justify-content: center;
   font-size: 33px;
   line-height: 1;
 }
 .login .loginContainer label {
-  color: white;
+  color: #232323;
   margin: 14px 0;
   display: block;
   font-size: 18px;
@@ -135,9 +133,16 @@ button {
   font-size: 15px;
   padding: 10px;
   background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: #232323;
   letter-spacing: 1px;
+  border: 1px solid #232323;
+  border-radius: 10px;
+
 }
+.login .loginContainer input:focus{
+  border: 1.5px solid #51b9d8;
+}
+
 .login .loginContainer .btnContainer {
   width: 100%;
   padding: 24px 0;

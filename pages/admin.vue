@@ -1,10 +1,10 @@
-<template>
-    <div>    
+<template >
+    <div class="body">    
         <div v-if="tab == 0" class="table">
-            <h2>Request Table</h2> <button @click="signout()">Sign Out</button>
+            <h2>Request Table</h2> 
+            <br>
              <div class="item">
-                <p>Ticket ID:</p>
-                <input type="text" name="ticket_ID" v-model="ticket_ID_search" required/>
+                <p>Ticket ID:</p> <input type="text" name="ticket_ID" v-model="ticket_ID_search" required/>
             </div>
             <div class="btn-block">
                 <button @click="search">Search</button>
@@ -17,6 +17,7 @@
                     <th>Email</th>
                     <th>Department</th>
                     <th>Computer ID</th>
+                    <th>Others...</th>
                 </tr>
                 
                 <tr v-for="(req,index) in request" :key="index">
@@ -25,7 +26,7 @@
                     <td>{{req.email}}</td>
                     <td>{{req.department}}</td>
                     <td>{{req.computer_ID}}</td>
-                    <td><button @click="details(req.ticket)">See Full Details...</button></td>
+                    <td><button id="details" @click="details(req.ticket)">See Full Details...</button></td>
                 </tr>
             
             </table>
@@ -39,7 +40,7 @@
                     <th>Email</th>
                     <th>Department</th>
                     <th>Computer ID</th>
-                    <th>Others...</th>
+                    
                 </tr>
                 
                 <tr v-for="(done,index) in done" :key="index">
@@ -51,6 +52,7 @@
                 </tr>
             
             </table>
+            <button id="so" @click="signout()">Sign Out</button>
             </no-ssr>
             
         </div>
@@ -136,10 +138,23 @@ export default {
 
 
 <style scoped>
+.body{
+    margin-top: -20px;
+    background-color: #b3b3b3;
+    background-image: url("https://image.freepik.com/free-photo/detail-brush-strokes-random-colors-use-as-background-texture-crafts-school_47726-5802.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    width: 100%;
+    padding-top: 20px;
+}
+
 #customers {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
+  margin-bottom: 10vh;
+  margin: 20px auto;
 }
 
 #customers td, #customers th {
@@ -153,12 +168,7 @@ export default {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background: radial-gradient(
-    ellipse at left bottom,
-    rgb(35, 22, 47) 0%,
-    rgba(21, 20, 72, 0.9) 59%,
-    rgba(17, 47, 75, 0.9) 100%
-  );
+  background-color: #51b9d8;
   color: white;
 }
 
@@ -177,14 +187,42 @@ h2{
     margin-bottom: 15px;
 }
 
-button{
+#details{
     background: transparent;
     color: #4c7faf;
     font-size: 14px;
     padding: 0;
     border: 0;
 }
-button:hover{
+#details:hover{
     text-decoration: underline  ;
+}
+.btn-block{
+    display: inline;
+    align-self: right;
+}
+.item p {
+    display: inline;
+}
+.item{
+    display: inline;
+}
+.btn-block button{
+    border: 1px solid #4c7faf;
+    background-color: #51b9d8;
+    border-radius: 5px;
+    color: #fff;
+}
+#so {
+    border: 1px solid #4c7faf;
+    background-color: #51b9d8;
+    border-radius: 5px;
+    color: #fff;
+}
+.btn-block button:hover{
+    background-color: #0666a3;
+}
+#so:hover{
+    background-color: #0666a3;
 }
 </style>
